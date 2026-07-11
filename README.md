@@ -1,1 +1,1 @@
-# EstructuradeDatos_2026
+# ESTRUCTURADEDATOS_2026
