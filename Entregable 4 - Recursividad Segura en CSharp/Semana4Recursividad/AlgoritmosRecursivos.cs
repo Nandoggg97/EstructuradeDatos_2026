@@ -1,39 +1,46 @@
-namespace Semana4Recursividad;
+using System;
 
-public static class AlgoritmosRecursivos
+namespace Semana4Recursividad
 {
-    public static long FactorialRecursivo(int n)
+    public static class AlgoritmosRecursivos
     {
-        if (n < 0)
+        // CASO BASE: if (n <= 1) detiene la recursión
+        // CASO RECURSIVO: n * FactorialRecursivo(n - 1)
+        public static long FactorialRecursivo(int n)
         {
-            throw new ArgumentException("n debe ser mayor o igual a 0");
+            if (n < 0)
+            {
+                throw new ArgumentException("n debe ser >= 0");
+            }
+
+            if (n <= 1)
+            {
+                return 1; // CASO BASE
+            }
+
+            return n * FactorialRecursivo(n - 1); // CASO RECURSIVO
         }
 
-        if (n == 0 || n == 1)
+        // Fibonacci recursivo: complejidad O(2^n) sin memoización
+        public static long FibonacciRecursivo(int n)
         {
-            return 1;
+            if (n < 0)
+            {
+                throw new ArgumentException("n debe ser >= 0");
+            }
+
+            if (n == 0)
+            {
+                return 0; // CASO BASE 1
+            }
+
+            if (n == 1)
+            {
+                return 1; // CASO BASE 2
+            }
+
+            return FibonacciRecursivo(n - 1)
+                 + FibonacciRecursivo(n - 2); // CASO RECURSIVO
         }
-
-        return n * FactorialRecursivo(n - 1);
-    }
-
-    public static long FibonacciRecursivo(int n)
-    {
-        if (n < 0)
-        {
-            throw new ArgumentException("n debe ser mayor o igual a 0");
-        }
-
-        if (n == 0)
-        {
-            return 0;
-        }
-
-        if (n == 1)
-        {
-            return 1;
-        }
-
-        return FibonacciRecursivo(n - 1) + FibonacciRecursivo(n - 2);
     }
 }
