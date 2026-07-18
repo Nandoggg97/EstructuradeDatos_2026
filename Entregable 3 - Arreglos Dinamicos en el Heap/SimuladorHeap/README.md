@@ -1,4 +1,4 @@
-# Practica 3 - Arreglos Dinamicos en el Heap
+# Entregable 3 - Arreglos Dinamicos en el Heap
 
 ## Nombre
 
