@@ -18,6 +18,14 @@ class SimuladorHeap
 
         Console.WriteLine("\n--- Arreglo Modificado ---");
         MostrarArreglo(arreglo);
+
+        Console.WriteLine("\n--- Reto extra: Modificar elemento ---");
+        ModificarElementos(arreglo);
+        MostrarArreglo(arreglo);
+
+        Console.WriteLine("\n--- Reto extra: Reasignar arreglo ---");
+        ReasignarArreglo(arreglo);
+        MostrarArreglo(arreglo);
     }
 
     static string[] InicializarArreglo(int n)
@@ -47,5 +55,17 @@ class SimuladorHeap
         {
             Console.WriteLine($"[{i}] = {arr[i]}");
         }
+    }
+
+    static void ModificarElementos(string[] arr)
+    {
+        //Modifica el contenido del mismo objeto en el Heap
+        arr[0] = "MODIFICADO";
+    }
+
+    static void ReasignarArreglo(string[] arr)
+    {
+        //Crea un objeto nuevo, pero solamente cambia la referencia local
+        arr = new string[] {"NUEVO", "ARREGLO" };
     }
 }
