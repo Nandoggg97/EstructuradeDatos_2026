@@ -1,0 +1,125 @@
+﻿namespace SistemaInventario
+{
+    /// <summary
+    /// Representa un producto dentro del inventario de la empresa.
+    /// Se usa struct porque es un registro de datos pequeño y tipo de valor.
+    /// </summary>
+    struct Producto
+    {
+        public int ID;          //Identificador unico del producto
+        public string Nombre;   //Nombre descriptivo del articulo
+        public double Precio;      //Precio unitario en moneda local
+        public int Stock;       //Cantidad disponible en almacen
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Title = "Sistema de Gestión de Inventario v1.0";
+
+            const int CAPACIDAD = 10;
+            Producto[] inventario = new Producto[CAPACIDAD];
+            int totalRegistros = 0;
+            string opcion;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("╔══════════════════════════════════════╗");
+                Console.WriteLine("║      SISTEMA DE INVENTARIO - MENÚ    ║");
+                Console.WriteLine("╠══════════════════════════════════════╣");
+                Console.WriteLine("║ 1. Registrar producto                ║");
+                Console.WriteLine("║ 2. Mostrar todos los productos       ║");
+                Console.WriteLine("║ 3. Salir                             ║");
+                Console.WriteLine("╚══════════════════════════════════════╝");
+                Console.Write("\nSelecciona una opción: ");
+                opcion = Console.ReadLine();
+
+                switch (opcion)
+                {
+                    case "1":
+                    RegistrarProducto(inventario, ref totalRegistros, CAPACIDAD);
+                    break;
+
+                    case "2":
+                    MostrarProductos(inventario, totalRegistros);
+                    break;
+
+                    case "3":
+                    Console.WriteLine("\nCerrando el sistema... ¡Hasta pronto!");
+                    break;
+
+                    default:
+                    Console.WriteLine("\nOpción inválida. Presiona Enter para continuar.");
+                    Console.ReadLine();
+                    break;
+                }
+            }while (opcion != "3");
+
+            static void RegistrarProducto(Producto[] inventario, ref int total, int capacidad)
+            {
+                Console.Clear();
+                Console.WriteLine("── REGISTRAR NUEVO PRODUCTO ──\n");
+
+                // ── Validación de capacidad ───────────────────────────────────
+                if (total >= capacidad)
+                {
+                    Console.WriteLine(" [!] El inventario está lleno. No se pueden agregar más productos.");
+                    Console.ReadLine();
+                    return;
+                }
+
+                // ── Captura de datos del usuario ──────────────────────────────
+                Console.Write(" ID del producto : ");
+                inventario[total].ID = int.Parse(Console.ReadLine());
+                Console.Write(" Nombre : ");
+                inventario[total].Nombre = Console.ReadLine();
+
+                Console.Write(" Precio unitario : $");
+                inventario[total].Precio = double.Parse(Console.ReadLine());
+
+                Console.Write(" Stock disponible : ");
+                inventario[total].Stock = int.Parse(Console.ReadLine());
+
+                // ── Incrementar el contador ───────────────────────────────────
+                total++;
+
+                Console.WriteLine($"\n [✓] Producto registrado exitosamente. Total en inventario: {total}");
+                Console.ReadLine();
+            }
+
+            static void MostrarProductos(Producto[] inventario, int total)
+            {
+                Console.Clear();
+                Console.WriteLine("── LISTADO COMPLETO DE INVENTARIO ──\n");
+
+                // ── Verificar si hay productos registrados ────────────────────
+                if (total == 0)
+                {
+                    Console.WriteLine(" [!] No hay productos registrados aún.");
+                    Console.ReadLine();
+                    return;
+                }
+
+                // ── Encabezado de tabla ───────────────────────────────────────
+                Console.WriteLine($" {"ID",-6} {"Nombre",-20} {"Precio",10} {"Stock",8}");
+                Console.WriteLine($" {new string('-', 48)}");
+
+                // ── Ciclo de recorrido del arreglo ────────────────────────────
+                for (int i = 0; i < total; i++)
+                {
+                    Console.WriteLine(
+                        $" {inventario[i].ID,-6} " +
+                        $"{inventario[i].Nombre,-20} " +
+                        $"${inventario[i].Precio,9:F2} " +
+                        $"{inventario[i].Stock,8}"
+                    );
+                }
+
+                Console.WriteLine($"\n Total de productos: {total}");
+                Console.ReadLine();
+            }
+        }
+    }
+}
