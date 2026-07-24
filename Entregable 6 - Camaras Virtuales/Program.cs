@@ -43,6 +43,27 @@ class Program
         }
 
         Console.WriteLine("\n¡Simulación completada!");
+
+        // Segundo rig: cámara de plano cercano
+        CamaraCinematica camCloseUp;
+
+        camCloseUp.nombre = "CAM_CLOSEUP";
+        camCloseUp.fov = 35f;
+        camCloseUp.velocidad = 0.15f;
+
+        camCloseUp.pos.x = 1f;
+        camCloseUp.pos.y = 1.8f;
+        camCloseUp.pos.z = -1.5f;
+
+        camCloseUp.foco.x = 0f;
+        camCloseUp.foco.y = 1.7f;
+        camCloseUp.foco.z = 0f;
+
+        CortarA(ref camara, camCloseUp);
+
+        Console.WriteLine("\nEstado después del corte:");
+
+        ImprimirEstado(camara, 21);
     }
 
 
@@ -71,5 +92,22 @@ class Program
             $"[Frame {frame:D3}] {cam.nombre} | " +
             $"POS({cam.pos.x:F2}, {cam.pos.y:F2}, {cam.pos.z:F2}) | " +
             $"FOCO({cam.foco.x:F2}, {cam.foco.y:F2}, {cam.foco.z:F2})");
+    }
+
+
+    static void CortarA(ref CamaraCinematica destino,
+                    CamaraCinematica fuente)
+    {
+        destino.pos.x = fuente.pos.x;
+        destino.pos.y = fuente.pos.y;
+        destino.pos.z = fuente.pos.z;
+
+        destino.foco.x = fuente.foco.x;
+        destino.foco.y = fuente.foco.y;
+        destino.foco.z = fuente.foco.z;
+
+        destino.fov = fuente.fov;
+
+        Console.WriteLine($"\nCorte realizado hacia '{fuente.nombre}'.");
     }
 }
