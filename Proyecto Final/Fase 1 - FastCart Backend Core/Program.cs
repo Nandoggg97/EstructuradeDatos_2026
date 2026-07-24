@@ -1,93 +1,117 @@
 ﻿using FastCartBackendCore.Models;
 using FastCartBackendCore.Services;
+using System.Diagnostics;
 
-Producto[] catalogo = new Producto[5];
-
-catalogo[0] = new Producto
+class Program
+{
+    static void Main(string[] args)
     {
-        SKU = 1003,
-        Nombre = "Monitor",
-        Precio = 500.00,
-        Stock = 20,
-        DatosProveedor = new Proveedor
+        const int cantidadProductos = 50;
+
+        Producto[] catalogo = GenerarCatalogo(cantidadProductos);
+
+        Console.WriteLine("==========================================");
+        Console.WriteLine(" FASTCART BACKEND CORE - FASE 1");
+        Console.WriteLine("==========================================");
+        Console.WriteLine($"Total de productos: {catalogo.Length}");
+
+        Console.WriteLine("\nCATÁLOGO ANTES DE ORDENAR");
+        Console.WriteLine("-------------------------");
+        MostrarPrimeros(catalogo, 5);
+
+        Stopwatch cronometro = Stopwatch.StartNew();
+        OrdenamientoService.ShellSort(catalogo);
+        cronometro.Stop();
+
+        Console.WriteLine("\nCATÁLOGO DESPUÉS DE ORDENAR");
+        Console.WriteLine("---------------------------");
+        MostrarPrimeros(catalogo, 5);
+
+        Console.WriteLine();
+        Console.WriteLine("RENDIMIENTO");
+        Console.WriteLine("------------");
+        Console.WriteLine($"Tiempo (ms): {cronometro.Elapsed.TotalMilliseconds:F4}");
+        Console.WriteLine($"Tiempo (μs): {cronometro.Elapsed.TotalMilliseconds * 1000:F2}");
+        Console.WriteLine($"Ticks: {cronometro.ElapsedTicks}");
+    }
+
+    static Producto[] GenerarCatalogo(int cantidad)
+    {
+        Producto[] catalogo = new Producto[cantidad];
+
+        // Semilla fija para obtener los mismos datos en cada ejecución
+        Random random = new Random(2026);
+
+        string[] nombresProductos =
         {
-            IdProveedor = 1,
-            NombreCorporativo = "Tecnología del Centro"
+            "Laptop",
+            "Monitor",
+            "Teclado",
+            "Mouse",
+            "Impresora",
+            "Disco SSD",
+            "Memoria RAM",
+            "Audífonos",
+            "Webcam",
+            "Router"
+        };
+
+        string[] nombresProveedores =
+        {
+            "Tecnología del Centro",
+            "Periféricos MX",
+            "Oficina Express",
+            "Distribuidora Digital",
+            "Soluciones FastCart"
+        };
+
+        for (int i = 0; i < cantidad; i++)
+        {
+            int indiceProducto = random.Next(nombresProductos.Length);
+            int indiceProveedor = random.Next(nombresProveedores.Length);
+
+            catalogo[i] = new Producto
+            {
+                SKU = 1001 + i,
+                Nombre = $"{nombresProductos[indiceProducto]} {i + 1}",
+                Precio = Math.Round(
+                    random.NextDouble() * (9999.99 - 10.00) + 10.00,
+                    2),
+                Stock = random.Next(0, 501),
+
+                DatosProveedor = new Proveedor
+                {
+                    IdProveedor = indiceProveedor + 1,
+                    NombreCorporativo = nombresProveedores[indiceProveedor]
+                }
+            };
         }
-    };
 
-catalogo[1] = new Producto
-    {
-        SKU = 1001,
-        Nombre = "Teclado",
-        Precio = 200.00,
-        Stock = 35,
-        DatosProveedor = new Proveedor
+        // Tres precios idénticos para probar el desempate por SKU
+        if (cantidad >= 3)
         {
-            IdProveedor = 2,
-            NombreCorporativo = "Periféricos MX"
+            catalogo[0].Precio = 7500.00;
+            catalogo[1].Precio = 7500.00;
+            catalogo[2].Precio = 7500.00;
         }
-    };
 
-catalogo[2] = new Producto
+        return catalogo;
+    }
+
+    static void MostrarPrimeros(Producto[] catalogo, int cantidad)
     {
-        SKU = 1007,
-        Nombre = "Laptop",
-        Precio = 500.00,
-        Stock = 10,
-        DatosProveedor = new Proveedor
+        int limite = Math.Min(cantidad, catalogo.Length);
+
+        for (int i = 0; i < limite; i++)
         {
-            IdProveedor = 1,
-            NombreCorporativo = "Tecnología del Centro"
-        }
-    };
+            Producto producto = catalogo[i];
 
-catalogo[3] = new Producto
-    {
-        SKU = 1002,
-        Nombre = "Mouse",
-        Precio = 100.00,
-        Stock = 50,
-        DatosProveedor = new Proveedor
-        {
-            IdProveedor = 2,
-            NombreCorporativo = "Periféricos MX"
-        }
-    };
-
-catalogo[4] = new Producto
-    {
-        SKU = 1005,
-        Nombre = "Impresora",
-        Precio = 300.00,
-        Stock = 12,
-        DatosProveedor = new Proveedor
-        {
-            IdProveedor = 3,
-            NombreCorporativo = "Oficina Express"
-        }
-    };
-
-Console.WriteLine("CATÁLOGO ANTES DE ORDENAR");
-Console.WriteLine("-------------------------");
-MostrarCatalogo(catalogo);
-
-OrdenamientoService.ShellSort(catalogo);
-
-Console.WriteLine();
-Console.WriteLine("CATÁLOGO DESPUÉS DE ORDENAR");
-Console.WriteLine("---------------------------");
-MostrarCatalogo(catalogo);
-
-
-void MostrarCatalogo(Producto[] catalogo)
-    {
-        foreach (Producto producto in catalogo)
-        {
             Console.WriteLine(
                 $"{producto.SKU} | " +
-                $"{producto.Nombre} | " +
-                $"${producto.Precio:F2} | " +
-                $"Stock: {producto.Stock}");
+                $"{producto.Nombre,-18} | " +
+                $"${producto.Precio,8:F2} | " +
+                $"Stock: {producto.Stock,3} | " +
+                $"{producto.DatosProveedor.NombreCorporativo}");
         }
     }
+}
